@@ -67,19 +67,18 @@ def future_hedge_design(back_test_date, cal_beta_date, sto_call_number, hold_per
         futP1 = backtest_period.iloc[i + 5, 0]  # 沪深300期末价格
 
         return_ = (stoP1 - stoP0) * sto_call_number + N * (futP0 - futP1) * 300  # 对冲总体收益（按元计算）
-        cost_ = stoP0 * sto_call_number + N * futP0 * 300 * 0.1  # 初始资金占用成本
-        return_rate = return_ / cost_ * 100  # 回报率计算
+        PF_retrun = (stoP1 - stoP0) * sto_call_number
+        Future_return =  N * (futP0 - futP1) * 300
 
-        list.append([return_, cost_, return_rate])
+        list.append([return_,PF_retrun, Future_return])
 
-    df = pd.DataFrame(list, columns=["return", "capital_cost", "return_rate"])
+    df = pd.DataFrame(list, columns=["Hedge_return", "PF_retrun", "Future_return"])
 
     # 计算平均收益率，收益，资金成本，beta， 回测期限，beta计算期限
     average_data = [x for x in np.mean(df)]
     output_sub = [back_test_date, cal_beta_date, sto_call_number, hold_period, Margin_ratio, beta] + average_data
 
     return output_sub
-
 
 #*******************************************************************************
 
@@ -94,19 +93,20 @@ Margin_ratio = 0.1  # 保证金比例
 output = []
 for i in range(50, 110, 10):
     for j in range(10,210, 10):
-        back_test_date = i  # 回测期限
-        cal_beta_date = j  # 贝塔计算期限
-        sto_call_number = 200000  # 股票买入数量
-        hold_period = 5  # 持有期限
-        Margin_ratio = 0.1  # 保证金比例
+        for k in range(5,25, 5):
+            back_test_date = i  # 回测期限
+            cal_beta_date = j  # 贝塔计算期限
+            sto_call_number = 200000  # 股票买入数量
+            hold_period = k  # 持有期限
+            Margin_ratio = 0.1  # 保证金比例
 
-        output_sub = future_hedge_design(back_test_date, cal_beta_date, sto_call_number, hold_period, Margin_ratio)
-        output.append(output_sub)
+            output_sub = future_hedge_design(back_test_date, cal_beta_date, sto_call_number, hold_period, Margin_ratio)
+            output.append(output_sub)
 
-output_df = pd.DataFrame(output, columns=["back_test_date", "cal_beta_date", "sto_call_number", "hold_period", "Margin_ratio", "beta", "return", "capital_cost", "return_rate"])
+output_df = pd.DataFrame(output, columns=["back_test_date", "cal_beta_date", "sto_call_number", "hold_period", "Margin_ratio", "beta", "Hedge_return", "PF_retrun", "Future_return"])
 
-output_df.to_csv("data/HedgeDesign.csv", index=False)
-output_df.to_excel("data/HedgeDesign.xlsx", index=False)
+output_df.to_csv("data/HedgeDesign1.csv", index=False)
+output_df.to_excel("data/HedgeDesign1.xlsx", index=False)
 
 
 
