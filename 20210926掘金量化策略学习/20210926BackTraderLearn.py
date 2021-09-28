@@ -102,7 +102,7 @@ class TestStrategy(bt.Strategy):
 cerebro = bt.Cerebro()
 
 # 数据处理
-data = ak.stock_zh_a_hist(symbol="000001", adjust="hfq").iloc[:, :6]
+data = ak.stock_zh_a_hist(symbol="000001", start_date="20210101",end_date="20210901", adjust="hfq").iloc[:, :6]
 data.columns = [
     'date',
     'open',
@@ -115,8 +115,8 @@ data.index = pd.to_datetime(data['date'])
 
 
 # 将pandas数据DF导入到实例化对象中
-start_date = datetime(2010, 4, 3)  # 回测开始时间
-end_date = datetime(2021, 6, 16)  # 回测结束时间
+start_date = datetime(2021, 4, 3)  # 回测开始时间
+end_date = datetime(2021, 8, 30)  # 回测结束时间
 data = bt.feeds.PandasData(dataname=data, fromdate=start_date, todate=end_date)  # 加载数据
 cerebro.adddata(data)
 
