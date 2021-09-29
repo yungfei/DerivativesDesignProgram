@@ -175,7 +175,7 @@ future_data["return_rate"] = future_data.close.diff(1)/future_data.close.shift(1
 
 
 # 将pandas数据DF导入到实例化对象中
-start_date = datetime(2021, 7, 3)  # 回测开始时间
+start_date = datetime(2020, 7, 3)  # 回测开始时间
 end_date = datetime(2021, 8, 30)  # 回测结束时间
 data_index = PandasData_more(dataname=index_data, fromdate=start_date, todate=end_date)  # 加载数据
 data_future = PandasData_more(dataname=future_data, fromdate=start_date, todate=end_date)  # 加载数据
